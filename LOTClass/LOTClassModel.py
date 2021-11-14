@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 from LOTClass.trainer import LOTClassTrainer
 from LOTClass.config import LOTClassConfig
@@ -17,7 +18,7 @@ class LOTClassifier():
             raise Exception(f"dataset path '{path}' already exists.")
         
         if os.path.exists(path) and args.overwrite_dataset:
-             os.rmdir(path)
+             shutil.rmtree(path)
 
         os.mkdir(path)
 
