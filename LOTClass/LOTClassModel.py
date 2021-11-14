@@ -8,7 +8,7 @@ class LOTClassifier():
     def __init__(self, path, labels, preatreatement_fn=lambda x: x, args=LOTClassConfig()):
         # Check format of labels
         try:
-            _ = labels[0][0]
+            _ = labels[0][0][0]
             dim = 1
         except TypeError:
             dim = 0

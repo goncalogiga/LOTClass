@@ -17,6 +17,7 @@ class LOTClassConfig:
         accum_steps=1,
         mcp_epochs=3,
         self_train_epochs=1,
+        early_stop=True,
         gpus=3,
         dist_port=12345):
     
@@ -37,5 +38,6 @@ class LOTClassConfig:
         self.accum_steps = accum_steps
         self.mcp_epochs = mcp_epochs
         self.self_train_epochs = self_train_epochs
+        self.early_stop = early_stop
         self.gpus = gpus
         self.dist_port = dist_port
