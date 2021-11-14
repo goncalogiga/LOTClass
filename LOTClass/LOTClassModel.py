@@ -18,7 +18,7 @@ class LOTClassifier():
             raise Exception(f"dataset path '{path}' already exists.")
         
         if os.path.exists(path) and args.overwrite_dataset:
-             shutil.rmtree(path)
+            shutil.rmtree(path)
 
         os.mkdir(path)
 
