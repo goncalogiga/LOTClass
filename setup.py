@@ -11,12 +11,4 @@ setup(
     author_email='',
     license='',
     packages=['LOTClass'],
-    install_requires=[
-        'torch==1.5.0',
-        'transformers==3.3.1',
-        'joblib==0.16.0',
-        'nltk==3.5',
-        'numpy==1.18.5',
-        'tqdm==4.47.0'
-    ]
 )

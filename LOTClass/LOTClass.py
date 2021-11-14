@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-from trainer import LOTClassTrainer
-from config import LOTClassConfig
+from LOTClass.trainer import LOTClassTrainer
+from LOTClass.config import LOTClassConfig
 
 
 class LOTClass():
@@ -50,10 +50,3 @@ class LOTClass():
         # Self-training 
         trainer.self_train(epochs=self.args.self_train_epochs, 
                            loader_name=self.args.final_model)
-
-# Testing
-l_config = LOTClassConfig(train_batch_size=45)
-
-l = LOTClass("datasets/testing/", ["1", "2", "3"], args=l_config)
-
-l.fit(["oi", "ola", "adeus"])
