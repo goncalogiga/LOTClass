@@ -4,7 +4,7 @@ from LOTClass.trainer import LOTClassTrainer
 from LOTClass.config import LOTClassConfig
 
 
-class LOTClass():
+class LOTClassifier():
     def __init__(self, path, labels, preatreatement_fn=lambda x: x, args=LOTClassConfig()):
         # Check format of labels
         try:
