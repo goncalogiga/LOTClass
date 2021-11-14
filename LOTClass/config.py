@@ -1,6 +1,7 @@
 class LOTClassConfig:
     def __init__(self,
         dataset_dir=None,
+        overwrite_dataset=False,
         label_names_file="label_names.txt",
         train_file="train.txt",
         test_file=None,
@@ -22,6 +23,7 @@ class LOTClassConfig:
         dist_port=12345):
     
         self.dataset_dir = dataset_dir
+        self.overwrite_dataset = overwrite_dataset
         self.label_names_file = label_names_file
         self.train_file = train_file
         self.test_file = test_file

@@ -13,8 +13,11 @@ class LOTClassifier():
         except TypeError:
             dim = 0
 
-        if os.path.exists(path):
+        if os.path.exists(path) and not args.overwrite_dataset:
             raise Exception(f"dataset path '{path}' already exists.")
+        
+        if os.path.exists(path) and args.overwrite_dataset:
+             os.rmdir(path)
 
         os.mkdir(path)
 
