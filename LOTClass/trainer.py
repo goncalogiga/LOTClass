@@ -369,8 +369,7 @@ class LOTClassTrainer(object):
             print("Preparing self supervision for masked category prediction.")
             if not os.path.exists(self.temp_dir):
                 os.makedirs(self.temp_dir)
-            #mp.spawn(self.prepare_mcp_dist, nprocs=self.world_size, args=(top_pred_num, match_threshold, loader_name))
-            self.prepare_mcp_dist(top_pred_num, match_threshold, loader_name)
+            mp.spawn(self.prepare_mcp_dist, nprocs=self.world_size, args=(top_pred_num, match_threshold, loader_name))
             gather_res = []
             for f in os.listdir(self.temp_dir):
                 if f[-3:] == '.pt':
