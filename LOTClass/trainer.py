@@ -292,8 +292,7 @@ class LOTClassTrainer(object):
             print("Contructing category vocabulary.")
             if not os.path.exists(self.temp_dir):
                 os.makedirs(self.temp_dir)
-            #mp.spawn(self.category_vocabulary_dist, nprocs=self.world_size, args=(top_pred_num, loader_name))
-            self.category_vocabulary_dist(top_pred_num, loader_name)
+            mp.spawn(self.category_vocabulary_dist, nprocs=self.world_size, args=(top_pred_num, loader_name))
             gather_res = []
             for f in os.listdir(self.temp_dir):
                 if f[-3:] == '.pt':
@@ -452,8 +451,7 @@ class LOTClassTrainer(object):
         else:
             self.prepare_mcp(top_pred_num, match_threshold)
             print(f"\nTraining model via masked category prediction.")
-            #mp.spawn(self.mcp_dist, nprocs=self.world_size, args=(epochs, loader_name))
-            self.mcp_dist(epochs, loader_name)
+            mp.spawn(self.mcp_dist, nprocs=self.world_size, args=(epochs, loader_name))
         self.model.load_state_dict(torch.load(loader_file))
 
     # prepare self training data and target distribution
@@ -566,8 +564,8 @@ class LOTClassTrainer(object):
             self.train_data = {"input_ids": self.train_data["input_ids"][rand_idx],
                                "attention_masks": self.train_data["attention_masks"][rand_idx]}
             print(f"\nStart self-training.")
-            #mp.spawn(self.self_train_dist, nprocs=self.world_size, args=(epochs, loader_name))
-            self.self_train_dist(epochs, loader_name)
+            mp.spawn(self.self_train_dist, nprocs=self.world_size, args=(epochs, loader_name))
+            #self.self_train_dist(epochs, loader_name)
 
     # use a model to do inference on a dataloader
     def inference(self, model, dataset_loader, rank, return_type):
