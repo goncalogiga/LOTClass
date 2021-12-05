@@ -33,6 +33,7 @@ class LOTClassifier():
                     f.write(preatreatement_fn(label) + '\n')
 
         self.path = path
+        self.labels = labels
         self.preatreatement_fn = preatreatement_fn
         self.args = args # Should be a LOTClassConfig instance
 
@@ -56,7 +57,7 @@ class LOTClassifier():
         with open(y_test_path, 'a') as f:
             for y in y_test:
                 idx = 0
-                for label_voc in enumerate(self.labels):
+                for label_voc in self.labels:
                     if y in label_voc: break 
                     idx += 1
                 f.write(str(idx) + '\n')
