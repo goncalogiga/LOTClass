@@ -42,7 +42,7 @@ class LOTClassTrainer(object):
         #self.pretrained_lm = 'bert-base-uncased'
         #self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
         self.pretrained_lm = 'camembert-base'
-        self.tokenizer = CamembertTokenizer
+        self.tokenizer = CamembertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
         self.vocab = self.tokenizer.get_vocab()
         self.vocab_size = len(self.vocab)
         self.mask_id = self.vocab[self.tokenizer.mask_token]
