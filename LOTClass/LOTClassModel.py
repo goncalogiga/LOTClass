@@ -40,13 +40,20 @@ class LOTClassifier():
         if X_test is None or y_test is None:
             raise Exception("Either X_test or y_test (or both) are undefined.") 
 
+        x_test_path = os.path.join(self.path, self.args.test_file)
+        y_test_path = os.path.join(self.path, self.args.test_label_file)
+
+        if self.args.overwrite_dataset:
+            if os.path.exists(x_test_path): os.remove(x_test_path)
+            if os.path.exists(y_test_path): os.remove(y_test_path)
+
         # Write the test dataset to args.test_file:
-        with open(self.args.test_file, 'a') as f:
+        with open(x_test_path, 'a') as f:
             for x in X_test:
                 f.write(self.preatreatement_fn(x) + '\n')
 
         # Write the labels (ground truth) to args.test_label_file
-        with open(self.args.test_label_file, 'a') as f:
+        with open(y_test_path, 'a') as f:
             for y in y_test:
                 idx = 0
                 for label_voc in enumerate(self.labels):
