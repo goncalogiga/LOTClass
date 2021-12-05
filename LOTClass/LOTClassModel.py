@@ -46,7 +46,7 @@ class LOTClassifier():
                 f.write(self.preatreatement_fn(x) + '\n')
 
         # Write the labels (ground truth) to args.test_label_file
-        with open(self.test_label_file, 'a') as f:
+        with open(self.args.test_label_file, 'a') as f:
             for y in y_test:
                 idx = 0
                 for label_voc in enumerate(self.labels):
