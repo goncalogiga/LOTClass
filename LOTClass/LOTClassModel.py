@@ -36,6 +36,24 @@ class LOTClassifier():
         self.preatreatement_fn = preatreatement_fn
         self.args = args # Should be a LOTClassConfig instance
 
+    def build_test_dataset(self, X_test, y_test):
+        if X_test is None or y_test is None:
+            raise Exception("Either X_test or y_test (or both) are undefined.") 
+
+        # Write the test dataset to args.test_file:
+        with open(self.args.test_file, 'a') as f:
+            for x in X_test:
+                f.write(self.preatreatement_fn(x) + '\n')
+
+        # Write the labels (ground truth) to args.test_label_file
+        with open(self.test_label_file, 'a') as f:
+            for y in y_test:
+                idx = 0
+                for label_voc in enumerate(self.labels):
+                    if y in label_voc: break 
+                    idx += 1
+                f.write(str(idx) + '\n')
+
     def fit(self, X, y=None):
         for text in X:
             text = text.replace(r'\n',  ' ')

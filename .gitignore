@@ -2,3 +2,4 @@
 !requirements.txt
 *.pt
 __pycache__/
+data/
