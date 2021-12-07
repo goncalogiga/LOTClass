@@ -63,15 +63,15 @@ class LOTClassTrainer(object):
 
     # set up distributed training
     def set_up_dist(self, rank):
-        # dist.init_process_group(
-        #     backend='nccl',
-        #     init_method=f'tcp://localhost:{self.dist_port}',
-        #     world_size=self.world_size,
-        #     rank=rank
-        # )
+        dist.init_process_group(
+            backend='nccl',
+            init_method=f'tcp://localhost:{self.dist_port}',
+            world_size=self.world_size,
+            rank=rank
+        )
         # create local model
         model = self.model.to(rank)
-        #model = DDP(model, device_ids=[rank], find_unused_parameters=True)
+        model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         return model
 
     # get document truncation statistics with the defined max length
@@ -260,8 +260,10 @@ class LOTClassTrainer(object):
 
     # construct category vocabulary (distributed function)
     def category_vocabulary_dist(self, rank, top_pred_num=50, loader_name="category_vocab.pt"):
-        #model = self.set_up_dist(rank)
-        self.model.to(rank)
+        if self.world_size > 1:
+            model = self.set_up_dist(rank)
+        else:
+            self.model.to(rank)
         model = self.model
         model.eval()
         label_name_dataset_loader = self.make_dataloader(rank, self.label_name_data, self.eval_batch_size)
@@ -320,8 +322,10 @@ class LOTClassTrainer(object):
 
     # prepare self supervision for masked category prediction (distributed function)
     def prepare_mcp_dist(self, rank, top_pred_num=50, match_threshold=20, loader_name="mcp_train.pt"):
-        #model = self.set_up_dist(rank)
-        model = self.model
+        if self.world_size > 1:
+            model = self.set_up_dist(rank)
+        else:
+            model = self.model
         model.eval()
         train_dataset_loader = self.make_dataloader(rank, self.train_data, self.eval_batch_size)
         all_input_ids = []
@@ -405,8 +409,10 @@ class LOTClassTrainer(object):
 
     # masked category prediction (distributed function)
     def mcp_dist(self, rank, epochs=5, loader_name="mcp_model.pt"):
-        model = self.model
-        #model = self.set_up_dist(rank)
+        if self.world_size > 1:
+            model = self.set_up_dist(rank)
+        else:
+            model = self.model
         mcp_dataset_loader = self.make_dataloader(rank, self.mcp_data, self.train_batch_size)
         total_steps = len(mcp_dataset_loader) * epochs / self.accum_steps
         optimizer = AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=2e-5, eps=1e-8)
@@ -443,7 +449,8 @@ class LOTClassTrainer(object):
                         model.zero_grad()
                 avg_train_loss = torch.tensor([total_train_loss / len(mcp_dataset_loader) * self.accum_steps]).to(rank)
                 gather_list = [torch.ones_like(avg_train_loss) for _ in range(self.world_size)]
-                dist.all_gather(gather_list, avg_train_loss)
+                if self.world_size > 1:
+                    dist.all_gather(gather_list, avg_train_loss)
                 avg_train_loss = torch.tensor(gather_list)
                 if rank == 0:
                     print(f"Average training loss: {avg_train_loss.mean().item()}")
