@@ -13,7 +13,7 @@ from torch.utils.data.distributed import DistributedSampler
 from nltk.corpus import stopwords
 from transformers import AdamW, get_linear_schedule_with_warmup
 # =================================================================================
-from transformers.models.camembert.tokenization_camembert import CamembertTokenizer
+from transformers import FlaubertTokenizer
 #from transformers import BertTokenizer
 # =================================================================================
 import numpy as np
@@ -43,7 +43,7 @@ class LOTClassTrainer(object):
         print(f"Effective training batch size: {eff_batch_size}")
         self.pretrained_lm = args.pretrained_lm
         #self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
-        self.tokenizer = CamembertTokenizer.from_pretrained(self.pretrained_lm, force_download=True)
+        self.tokenizer = FlaubertTokenizer.from_pretrained(self.pretrained_lm, force_download=True)
         self.vocab = self.tokenizer.get_vocab()
         self.vocab_size = len(self.vocab)
         self.mask_id = self.vocab[self.tokenizer.mask_token]

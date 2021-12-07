@@ -1,24 +1,24 @@
-from transformers import PreTrainedModel
+from transformers import XLMPreTrainedModel
 # =================================================================================
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
-from transformers import CamembertModel
-from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
+from transformers import FlaubertModel
+from transformers.models.flaubert.modeling_flaubert import FlaubertWithLMHeadModel
 # =================================================================================
 from torch import nn
 import sys
 
 
-class LOTClassModel(PreTrainedModel):
+class LOTClassModel(XLMPreTrainedModel):
 
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
         #self.bert = BertModel(config, add_pooling_layer=False)
-        self.bert = CamembertModel(config, add_pooling_layer=False)
+        self.bert = FlaubertModel(config)
         #self.cls = BertOnlyMLMHead(config)
-        self.cls = CamembertForMaskedLM(config)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.cls = FlaubertWithLMHeadModel(config)
+        self.dropout = nn.Dropout(config.dropout)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
         self.classifier = nn.Linear(config.hidden_size, config.num_labels)
