@@ -3,7 +3,7 @@ from transformers import BertPreTrainedModel
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from transformers import CamembertModel
-from transformers.models.roberta.modeling_roberta import RobertaLMHead
+from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
 from torch import nn
 import sys
@@ -17,8 +17,7 @@ class LOTClassModel(BertPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        #self.cls = CamembertForMaskedLM(config)
-        self.cls = RobertaLMHead(config) # Bert uses the roberta MLM Head. We use it to.
+        self.cls = CamembertForMaskedLM(config).lm_head # Using the MLM Head
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
