@@ -108,6 +108,8 @@ class LOTClassifier():
                     numeric_y_test.append(key)
                     break
 
+        assert len(y_test) == len(y_pred), f"Make sure the names of the labels in the test file match the labels of the model."
+
         print(classification_report(numeric_y_test, y_pred, target_names=target_names))
         
         return numeric_y_test, y_pred
