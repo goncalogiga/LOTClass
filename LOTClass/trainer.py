@@ -70,7 +70,7 @@ class LOTClassTrainer(object):
         #     rank=rank
         # )
         # create local model
-        model = self.model.to(rank)
+        model = self.model
         #model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         return model
 
