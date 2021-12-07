@@ -63,12 +63,12 @@ class LOTClassTrainer(object):
 
     # set up distributed training
     def set_up_dist(self, rank):
-        dist.init_process_group(
-            backend='nccl',
-            init_method=f'tcp://localhost:{self.dist_port}',
-            world_size=self.world_size,
-            rank=rank
-        )
+        # dist.init_process_group(
+        #     backend='nccl',
+        #     init_method=f'tcp://localhost:{self.dist_port}',
+        #     world_size=self.world_size,
+        #     rank=rank
+        # )
         # create local model
         model = self.model.to(rank)
         model = DDP(model, device_ids=[rank], find_unused_parameters=True)
