@@ -3,6 +3,7 @@ from transformers import BertPreTrainedModel
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from transformers import CamembertModel
+from transformers import AutoModelForMaskedLM
 from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
 from torch import nn
@@ -10,13 +11,12 @@ import sys
 
 
 class CamembertOnlyMLMHead(nn.Module):
-    def __init__(self, MLM):
+    def __init__(self, config=None):
         super().__init__()
-        self.predictions = MLM
+        self.predictions = AutoModelForMaskedLM.from_pretrained('camembert-base')
 
-    def forward(self, sequence_output):
-        outputs = self.predictions(sequence_output, masked_lm_labels=sequence_output)
-        loss, prediction_scores = outputs[:2]
+    def forward(self, input_seq):
+        prediction_scores = self.predictions(input_seq).logits
         return prediction_scores
 
 
@@ -30,8 +30,7 @@ class LOTClassModel(BertPreTrainedModel):
         #self.cls = BertOnlyMLMHead(config)
 
         # ===============================================================
-        MLM = CamembertForMaskedLM.from_pretrained("camembert-base")
-        self.cls = CamembertOnlyMLMHead(MLM)
+        self.cls = CamembertOnlyMLMHead()
         # ===============================================================
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
