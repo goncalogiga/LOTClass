@@ -97,7 +97,7 @@ class LOTClassifier():
 
         with open(os.path.join(self.path, self.args.out_file)) as file:
             y_pred = file.readlines()
-            y_pred = [line.rstrip() for line in y_pred]
+            y_pred = [int(line.rstrip()) for line in y_pred]
 
         target_names = list(self.trainer.label_name_dict.keys())
 
