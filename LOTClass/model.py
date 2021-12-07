@@ -1,5 +1,5 @@
-#from transformers import BertPreTrainedModel, BertModel
-from transformers import BertPreTrainedModel, CamembertModel
+from transformers import BertPreTrainedModel, BertModel
+#from transformers import BertPreTrainedModel, CamembertModel
 from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from torch import nn
 import sys
@@ -10,8 +10,8 @@ class LOTClassModel(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
-        #self.bert = BertModel(config, add_pooling_layer=False)
-        self.bert = CamembertModel(config, add_pooling_layer=False)
+        self.bert = BertModel(config, add_pooling_layer=False)
+        #self.bert = CamembertModel(config, add_pooling_layer=False)
         self.cls = BertOnlyMLMHead(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)

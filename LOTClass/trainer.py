@@ -12,8 +12,8 @@ from torch.utils.data import TensorDataset, DataLoader, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
 from nltk.corpus import stopwords
 from transformers import AdamW, get_linear_schedule_with_warmup
-from transformers import CamembertTokenizer
-#from transformers import BertTokenizer
+#from transformers import CamembertTokenizer
+from transformers import BertTokenizer
 import numpy as np
 import os
 import shutil
@@ -39,10 +39,10 @@ class LOTClassTrainer(object):
         eff_batch_size = self.train_batch_size * self.world_size * self.accum_steps
         assert abs(eff_batch_size - 128) < 10, f"Make sure the effective training batch size is around 128, current: {eff_batch_size}"
         print(f"Effective training batch size: {eff_batch_size}")
-        #self.pretrained_lm = 'bert-base-uncased'
-        #self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
-        self.pretrained_lm = 'camembert-base'
-        self.tokenizer = CamembertTokenizer.from_pretrained(self.pretrained_lm)
+        self.pretrained_lm = 'bert-base-multilingual-uncased'
+        self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
+        #self.pretrained_lm = 'camembert-base'
+        #self.tokenizer = CamembertTokenizer.from_pretrained(self.pretrained_lm)
         self.vocab = self.tokenizer.get_vocab()
         self.vocab_size = len(self.vocab)
         self.mask_id = self.vocab[self.tokenizer.mask_token]
