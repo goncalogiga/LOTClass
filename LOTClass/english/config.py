@@ -21,7 +21,8 @@ class LOTClassConfig:
         self_train_epochs=1,
         early_stop=True,
         gpus=3,
-        dist_port=12345):
+        dist_port=12345,
+        verbose=False):
     
         self.dataset_dir = dataset_dir
         self.overwrite_dataset = overwrite_dataset
@@ -45,3 +46,4 @@ class LOTClassConfig:
         self.early_stop = early_stop
         self.gpus = gpus
         self.dist_port = dist_port
+        self.verbose = verbose

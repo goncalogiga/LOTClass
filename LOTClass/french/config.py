@@ -21,6 +21,7 @@ class LOTClassConfig:
         self_train_epochs=1,
         early_stop=True,
         gpus=3,
+        verbose=False,
         dist_port=12345):
     
         self.dataset_dir = dataset_dir
@@ -45,3 +46,4 @@ class LOTClassConfig:
         self.early_stop = early_stop
         self.gpus = gpus
         self.dist_port = dist_port
+        self.verbose = verbose

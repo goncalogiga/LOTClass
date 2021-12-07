@@ -61,6 +61,7 @@ class LOTClassTrainer(object):
         self.st_loss = nn.KLDivLoss(reduction='batchmean')
         self.update_interval = args.update_interval
         self.early_stop = args.early_stop
+        self.verbose = args.verbose
 
     # set up distributed training
     def set_up_dist(self, rank):
@@ -90,8 +91,9 @@ class LOTClassTrainer(object):
         encoded_dict = self.tokenizer.batch_encode_plus(docs, add_special_tokens=True, max_length=self.max_len, padding='max_length',
                                                         return_attention_mask=True, truncation=True, return_tensors='pt')
         input_ids = encoded_dict['input_ids']
-        print(f"input_ids size (from encode): {input_ids.size()}")
-        print(f"input_ids (from encode): {input_ids}")
+        if self.verbose:
+            print(f"input_ids size (from encode): {input_ids.size()}")
+            print(f"input_ids (from encode): {input_ids}")
         attention_masks = encoded_dict['attention_mask']
         return input_ids, attention_masks
 
@@ -226,7 +228,8 @@ class LOTClassTrainer(object):
 
     # create dataset loader
     def make_dataloader(self, rank, data_dict, batch_size):
-        print(f"data_dict['input_ids']: {data_dict['input_ids']}")
+        if self.verbose:
+            print(f"data_dict['input_ids']: {data_dict['input_ids']}")
         if "labels" in data_dict:
             dataset = TensorDataset(data_dict["input_ids"], data_dict["attention_masks"], data_dict["labels"])
         else:
@@ -280,8 +283,9 @@ class LOTClassTrainer(object):
                     input_mask = batch[1].to(rank)
                     label_pos = batch[2].to(rank)
                     match_idx = label_pos >= 0
-                    print(f"input size: {input_ids.size()}")
-                    print(input_ids)
+                    if self.verbose:
+                        print(f"input size: {input_ids.size()}")
+                        print(input_ids)
                     predictions = model(input_ids,
                                         pred_mode="mlm",
                                         token_type_ids=None, 
