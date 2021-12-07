@@ -99,7 +99,7 @@ class LOTClassifier():
             y_pred = file.readlines()
             y_pred = [line.rstrip() for line in y_pred]
 
-        target_names = list(self.trainer.label_name_dict.keys)
+        target_names = list(self.trainer.label_name_dict.keys())
         y_test = [self.trainer.label_name_dict[label] for label in y_test]
 
         print(classification_report(y_test, y_pred, target_names=target_names))
