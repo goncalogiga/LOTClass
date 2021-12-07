@@ -80,3 +80,6 @@ class LOTClassifier():
         # Self-training 
         trainer.self_train(epochs=self.args.self_train_epochs, 
                            loader_name=self.args.final_model)
+        # Write test set results
+        if self.args.test_file is not None:
+            trainer.write_results(loader_name=self.args.final_model, out_file=self.args.out_file)

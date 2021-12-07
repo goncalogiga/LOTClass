@@ -555,7 +555,7 @@ class LOTClassTrainer(object):
         idx = 0
         if self.early_stop:
             agree_count = 0
-        for i in range(int(total_steps / self.update_interval)):
+        for i in tqdm(range(int(total_steps / self.update_interval))):
             self_train_dict, idx, agree = self.prepare_self_train_data(rank, model, idx)
             # early stop if current prediction agrees with target distribution for 3 consecutive updates
             if self.early_stop:
@@ -582,8 +582,10 @@ class LOTClassTrainer(object):
             self.train_data = {"input_ids": self.train_data["input_ids"][rand_idx],
                                "attention_masks": self.train_data["attention_masks"][rand_idx]}
             print(f"\nStart self-training.")
-            #mp.spawn(self.self_train_dist, nprocs=self.world_size, args=(epochs, loader_name))
-            self.self_train_dist(0, epochs, loader_name)
+            if self.world_size > 1:
+                mp.spawn(self.self_train_dist, nprocs=self.world_size, args=(epochs, loader_name))
+            else:
+                self.self_train_dist(0, epochs, loader_name)
 
     # use a model to do inference on a dataloader
     def inference(self, model, dataset_loader, rank, return_type):
