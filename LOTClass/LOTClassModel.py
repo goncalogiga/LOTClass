@@ -102,9 +102,9 @@ class LOTClassifier():
         target_names = list(self.trainer.label_name_dict.keys())
 
         numeric_y_test = []
-        for label in y_test:
+        for label_words in y_test:
             for key, value in self.trainer.label_name_dict.items():
-                if label.upper() in map(str.upper, value):
+                if any([label.upper() in map(str.upper, value) for label in label_words]):
                     numeric_y_test.append(key)
                     break
 
