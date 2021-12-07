@@ -229,8 +229,6 @@ class LOTClassTrainer(object):
 
     # create dataset loader
     def make_dataloader(self, rank, data_dict, batch_size):
-        if self.verbose:
-            print(f"data_dict["input_ids"] size: {data_dict["input_ids"].size()}")
         if "labels" in data_dict:
             dataset = TensorDataset(data_dict["input_ids"], data_dict["attention_masks"], data_dict["labels"])
         else:
