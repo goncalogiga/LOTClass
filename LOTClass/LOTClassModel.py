@@ -1,5 +1,6 @@
 import os
 import shutil
+from sklearn.metrics import classification_report
 from pathlib import Path
 from LOTClass.trainer import LOTClassTrainer
 from LOTClass.config import LOTClassConfig
@@ -62,6 +63,8 @@ class LOTClassifier():
                     idx += 1
                 f.write(str(idx) + '\n')
 
+        self.trainer = None
+
     def fit(self, X, y=None):
         for text in X:
             text = text.replace(r'\n',  ' ')
@@ -69,17 +72,36 @@ class LOTClassifier():
             with open(os.path.join(self.path, "train.txt"), 'a') as f:
                 f.write(self.preatreatement_fn(text) + '\n')
         
-        trainer = LOTClassTrainer(self.args)
+        self.trainer = LOTClassTrainer(self.args)
         # Construct category vocabulary
-        trainer.category_vocabulary(top_pred_num=self.args.top_pred_num, 
+        self.trainer.category_vocabulary(top_pred_num=self.args.top_pred_num, 
                                     category_vocab_size=self.args.category_vocab_size)
         # Training with masked category prediction
-        trainer.mcp(top_pred_num=self.args.top_pred_num, 
+        self.trainer.mcp(top_pred_num=self.args.top_pred_num, 
                     match_threshold=self.args.match_threshold, 
                     epochs=self.args.mcp_epochs)
         # Self-training 
-        trainer.self_train(epochs=self.args.self_train_epochs, 
+        self.trainer.self_train(epochs=self.args.self_train_epochs, 
                            loader_name=self.args.final_model)
         # Write test set results
         if self.args.test_file is not None:
-            trainer.write_results(loader_name=self.args.final_model, out_file=self.args.out_file)
+            self.trainer.write_results(loader_name=self.args.final_model, out_file=self.args.out_file)
+
+    def classification_report(self, y_test):
+        if self.trainer is None:
+            raise Exception("Cannot output a classification report prior to training.\
+                             Please run model.fit() first.")
+
+        if not isinstance(y_test, list):
+            raise Exception(f"Argument 'y_test' should be a list (got type '{type(y_test)}'")
+
+        with open(os.path.join(self.path, self.args.out_file)) as file:
+            y_pred = file.readlines()
+            y_pred = [line.rstrip() for line in y_pred]
+
+        target_names = list(self.trainer.label_name_dict.keys)
+        y_test = [self.trainer.label_name_dict[label] for label in y_test]
+
+        print(classification_report(y_test, y_pred, target_names=target_names))
+        
+        return y_test, y_pred
