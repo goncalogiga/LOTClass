@@ -71,7 +71,7 @@ class LOTClassTrainer(object):
         # )
         # create local model
         model = self.model.to(rank)
-        model = DDP(model, device_ids=[rank], find_unused_parameters=True)
+        #model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         return model
 
     # get document truncation statistics with the defined max length
