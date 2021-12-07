@@ -456,7 +456,7 @@ class LOTClassTrainer(object):
                     print(f"Average training loss: {avg_train_loss.mean().item()}")
             if rank == 0:
                 loader_file = os.path.join(self.dataset_dir, loader_name)
-                torch.save(model.module.state_dict(), loader_file)
+                torch.save(model.state_dict(), loader_file)
         except RuntimeError as err:
             self.cuda_mem_error(err, "train", rank)
 
