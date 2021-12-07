@@ -70,7 +70,7 @@ class LOTClassTrainer(object):
         #     rank=rank
         # )
         # create local model
-        model = self.model
+        model = self.model.to(rank)
         #model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         return model
 
@@ -260,7 +260,9 @@ class LOTClassTrainer(object):
 
     # construct category vocabulary (distributed function)
     def category_vocabulary_dist(self, rank, top_pred_num=50, loader_name="category_vocab.pt"):
-        model = self.set_up_dist(rank)
+        #model = self.set_up_dist(rank)
+        self.model.to(rank)
+        model = self.model
         model.eval()
         label_name_dataset_loader = self.make_dataloader(rank, self.label_name_data, self.eval_batch_size)
         category_words_freq = {i: defaultdict(float) for i in range(self.num_class)}
@@ -318,7 +320,8 @@ class LOTClassTrainer(object):
 
     # prepare self supervision for masked category prediction (distributed function)
     def prepare_mcp_dist(self, rank, top_pred_num=50, match_threshold=20, loader_name="mcp_train.pt"):
-        model = self.set_up_dist(rank)
+        #model = self.set_up_dist(rank)
+        model = self.model
         model.eval()
         train_dataset_loader = self.make_dataloader(rank, self.train_data, self.eval_batch_size)
         all_input_ids = []
@@ -402,7 +405,8 @@ class LOTClassTrainer(object):
 
     # masked category prediction (distributed function)
     def mcp_dist(self, rank, epochs=5, loader_name="mcp_model.pt"):
-        model = self.set_up_dist(rank)
+        model = self.model
+        #model = self.set_up_dist(rank)
         mcp_dataset_loader = self.make_dataloader(rank, self.mcp_data, self.train_batch_size)
         total_steps = len(mcp_dataset_loader) * epochs / self.accum_steps
         optimizer = AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=2e-5, eps=1e-8)
