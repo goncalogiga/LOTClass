@@ -10,12 +10,13 @@ import sys
 
 
 class CamembertOnlyMLMHead(nn.Module):
-    def __init__(self, config):
+    def __init__(self, MLM):
         super().__init__()
-        self.predictions = CamembertForMaskedLM(config).lm_head
+        self.predictions = MLM
 
     def forward(self, sequence_output):
-        prediction_scores = self.predictions(sequence_output)
+        outputs = self.predictions(sequence_output, masked_lm_labels=sequence_output)
+        loss, prediction_scores = outputs[:2]
         return prediction_scores
 
 
@@ -27,7 +28,11 @@ class LOTClassModel(BertPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        self.cls = CamembertOnlyMLMHead(config)
+
+        # ===============================================================
+        MLM = CamembertForMaskedLM.from_pretrained("camembert-base")
+        self.cls = CamembertOnlyMLMHead(MLM)
+        # ===============================================================
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
