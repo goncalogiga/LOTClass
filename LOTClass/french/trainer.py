@@ -90,6 +90,8 @@ class LOTClassTrainer(object):
         encoded_dict = self.tokenizer.batch_encode_plus(docs, add_special_tokens=True, max_length=self.max_len, padding='max_length',
                                                         return_attention_mask=True, truncation=True, return_tensors='pt')
         input_ids = encoded_dict['input_ids']
+        print(f"input_ids size (from encode): {input_ids.size()}")
+        print(f"input_ids (from encode): {input_ids}")
         attention_masks = encoded_dict['attention_mask']
         return input_ids, attention_masks
 
