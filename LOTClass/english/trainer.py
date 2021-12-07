@@ -30,6 +30,7 @@ class LOTClassTrainer(object):
 
     def __init__(self, args):
         self.args = args
+        self.verbose = args.verbose
         self.max_len = args.max_len
         self.dataset_dir = args.dataset_dir
         self.dist_port = args.dist_port
@@ -61,7 +62,6 @@ class LOTClassTrainer(object):
         self.st_loss = nn.KLDivLoss(reduction='batchmean')
         self.update_interval = args.update_interval
         self.early_stop = args.early_stop
-        self.verbose = args.verbose
 
     # set up distributed training
     def set_up_dist(self, rank):
