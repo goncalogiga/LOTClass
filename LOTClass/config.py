@@ -3,6 +3,7 @@ class LOTClassConfig:
         dataset_dir=None,
         overwrite_dataset=False,
         label_names_file="label_names.txt",
+        pretrained_lm="bert-base-multilingual-uncased",
         train_file="train.txt",
         test_file=None,
         test_label_file=None,
@@ -25,6 +26,7 @@ class LOTClassConfig:
         self.dataset_dir = dataset_dir
         self.overwrite_dataset = overwrite_dataset
         self.label_names_file = label_names_file
+        self.pretrained_lm = pretrained_lm
         self.train_file = train_file
         self.test_file = test_file
         self.test_label_file = test_label_file
