@@ -277,6 +277,8 @@ class LOTClassTrainer(object):
                     input_mask = batch[1].to(rank)
                     label_pos = batch[2].to(rank)
                     match_idx = label_pos >= 0
+                    print(f"input size: {input_ids.size()}")
+                    print(input_ids)
                     predictions = model(input_ids,
                                         pred_mode="mlm",
                                         token_type_ids=None, 
