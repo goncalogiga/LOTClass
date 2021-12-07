@@ -1,4 +1,4 @@
-from transformers import BertPreTrainedModel
+from transformers import PreTrainedModel
 # =================================================================================
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
@@ -9,7 +9,7 @@ from torch import nn
 import sys
 
 
-class LOTClassModel(BertPreTrainedModel):
+class LOTClassModel(PreTrainedModel):
 
     def __init__(self, config):
         super().__init__(config)
