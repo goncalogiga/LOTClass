@@ -3,7 +3,7 @@ class LOTClassConfig:
         dataset_dir=None,
         overwrite_dataset=False,
         label_names_file="label_names.txt",
-        pretrained_lm="flaubert/flaubert_base_uncased",
+        pretrained_lm="camembert-base",
         train_file="train.txt",
         test_file=None,
         test_label_file=None,
