@@ -3,25 +3,13 @@ from transformers import BertPreTrainedModel
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from transformers import CamembertModel
-from transformers import AutoModelForMaskedLM
 from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
 from torch import nn
 import sys
 
 
-class CamembertOnlyMLMHead(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-        self.cls = CamembertForMaskedLM(config).
-
-    def forward(self, sequence_output):
-        prediction_scores = self.predictions(sequence_output)
-        return prediction_scores
-
-
 class LOTClassModel(BertPreTrainedModel):
-
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
