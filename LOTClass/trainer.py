@@ -296,7 +296,11 @@ class LOTClassTrainer(object):
             print("Contructing category vocabulary.")
             if not os.path.exists(self.temp_dir):
                 os.makedirs(self.temp_dir)
-            mp.spawn(self.category_vocabulary_dist, nprocs=self.world_size, args=(top_pred_num, loader_name))
+            print(f"Args: ({top_pred_num, loader_name}); World size: {self.world_size}")
+            try:
+                mp.spawn(self.category_vocabulary_dist, nprocs=self.world_size, args=(top_pred_num, loader_name))
+            except:
+                self.category_vocabulary_dist(0, top_pred_num, loader_name)
             gather_res = []
             for f in os.listdir(self.temp_dir):
                 if f[-3:] == '.pt':
