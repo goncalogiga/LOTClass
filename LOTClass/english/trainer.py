@@ -117,6 +117,7 @@ class LOTClassTrainer(object):
             chunks = [docs[x:x+chunk_size] for x in range(0, len(docs), chunk_size)]
             results = Parallel(n_jobs=self.num_cpus)(delayed(self.encode)(docs=chunk) for chunk in chunks)
             input_ids = torch.cat([result[0] for result in results])
+            print(f"Concatenated input_ids size: {input_ids.size()}")
             attention_masks = torch.cat([result[1] for result in results])
             print(f"Saving encoded texts into {loader_file}")
             if label_file is not None:
@@ -144,6 +145,7 @@ class LOTClassTrainer(object):
                 input_ids_with_label_name = torch.cat([result[0] for result in results])
                 attention_masks_with_label_name = torch.cat([result[1] for result in results])
                 label_name_idx = torch.cat([result[2] for result in results])
+                print(f"Concatenated input_ids_with_label_name size: {input_ids_with_label_name.size()}")
                 assert len(input_ids_with_label_name) > 0, "No label names appear in corpus!"
                 label_name_data = {"input_ids": input_ids_with_label_name, "attention_masks": attention_masks_with_label_name, "labels": label_name_idx}
                 loader_file = os.path.join(dataset_dir, label_name_loader_name)
