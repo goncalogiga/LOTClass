@@ -10,5 +10,5 @@ setup(
     author='Gonçalo Giga',
     author_email='',
     license='',
-    packages=['LOTClass'],
+    packages=['LOTClass/english', 'LOTClass/french'],
 )
