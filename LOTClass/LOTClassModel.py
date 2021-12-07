@@ -100,8 +100,14 @@ class LOTClassifier():
             y_pred = [line.rstrip() for line in y_pred]
 
         target_names = list(self.trainer.label_name_dict.keys())
-        y_test = [self.trainer.label_name_dict[label] for label in y_test]
 
-        print(classification_report(y_test, y_pred, target_names=target_names))
+        numeric_y_test = []
+        for label in y_test:
+            for key, value in self.trainer.label_name_dict.items():
+                if label.upper() in map(str.upper, value):
+                    numeric_y_test.append(key)
+                    break
+
+        print(classification_report(numeric_y_test, y_pred, target_names=target_names))
         
-        return y_test, y_pred
+        return numeric_y_test, y_pred
