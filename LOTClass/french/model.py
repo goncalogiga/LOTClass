@@ -9,6 +9,16 @@ from torch import nn
 import sys
 
 
+class CamembertOnlyMLMHead(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.predictions = CamembertForMaskedLM(config).lm_head
+
+    def forward(self, sequence_output):
+        prediction_scores = self.predictions(sequence_output)
+        return prediction_scores
+
+
 class LOTClassModel(BertPreTrainedModel):
 
     def __init__(self, config):
@@ -17,7 +27,7 @@ class LOTClassModel(BertPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        self.cls = CamembertForMaskedLM(config).lm_head # Using the MLM Head
+        self.cls = CamembertOnlyMLMHead(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
