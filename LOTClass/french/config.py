@@ -47,3 +47,4 @@ class LOTClassConfig:
         self.gpus = gpus
         self.dist_port = dist_port
         self.verbose = verbose
+        self.mlm = True

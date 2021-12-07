@@ -46,6 +46,7 @@ class LOTClassTrainer(object):
         #self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
         self.tokenizer = CamembertTokenizer.from_pretrained(self.pretrained_lm, do_lower_case=True)
         self.vocab = self.tokenizer.get_vocab()
+        print(self.vocab)
         self.vocab_size = len(self.vocab)
         self.mask_id = self.vocab[self.tokenizer.mask_token]
         self.inv_vocab = {k:v for v, k in self.vocab.items()}
@@ -229,7 +230,7 @@ class LOTClassTrainer(object):
     # create dataset loader
     def make_dataloader(self, rank, data_dict, batch_size):
         if self.verbose:
-            print(f"data_dict['input_ids']: {data_dict['input_ids']}")
+            print(f"data_dict["input_ids"] size: {data_dict["input_ids"].size()}")
         if "labels" in data_dict:
             dataset = TensorDataset(data_dict["input_ids"], data_dict["attention_masks"], data_dict["labels"])
         else:

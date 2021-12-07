@@ -1,8 +1,8 @@
-from transformers import BertPreTrainedModel
 # =================================================================================
 #from transformers import BertModel
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from transformers import CamembertModel
+from transformers import RobertaPreTrainedModel
 from transformers.activations import ACT2FN
 from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
@@ -57,7 +57,7 @@ class CamembertOnlyMLMHead(nn.Module):
         return prediction_scores
 
 
-class LOTClassModel(BertPreTrainedModel):
+class LOTClassModel(RobertaPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
