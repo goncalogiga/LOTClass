@@ -294,6 +294,7 @@ class LOTClassTrainer(object):
                     input_mask = batch[1].to(rank)
                     label_pos = batch[2].to(rank)
                     match_idx = label_pos >= 0
+                    print(match_idx)
                     for input_id in input_ids:
                         self.print_predictions(input_id)
                     for attention_mask in input_mask:
