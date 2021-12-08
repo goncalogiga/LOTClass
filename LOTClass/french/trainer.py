@@ -166,7 +166,7 @@ class LOTClassTrainer(object):
         idx = 1 # index starts at 1 due to [CLS] token
         for i, wordpc in enumerate(doc):
             wordpcs.append(wordpc[1:] if wordpc.startswith("▁") else wordpc)
-            print(wordpc)
+            print(wordpcs)
             if idx >= self.max_len - 1: # last index will be [SEP] token
                 break
             if i == len(doc) - 1 or doc[i+1].startswith("▁"):

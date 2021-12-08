@@ -50,18 +50,12 @@ import sys
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.model = CamembertForMaskedLM.from_pretrained("camembert-base")
-        self.tokenizer = CamembertTokenizer.from_pretrained("camembert-base")
-        self.topk = 50 # Maximum number of predictions kept
-        self.model.eval()
+        self.model = CamembertForMaskedLM(config)
 
-    def forward(self, input_ids):
-        print("MLMHead input shape:", input_ids.size())
-        logits = self.model(input_ids)[0]  # The last hidden-state is the first element of the output tuple
-        masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
-        logits = logits[0, masked_index, :]
-        prob = logits.softmax(dim=0)
-        return prob.topk(k=self.topk, dim=0)
+    def forward(self, sequence_output):
+        print("MLMHead input shape:", sequence_output.size())
+        prediction_scores = self.predictions(sequence_output)
+        return prediction_scores
 
 
 class LOTClassModel(RobertaPreTrainedModel):
