@@ -47,15 +47,23 @@ import sys
 #         return hidden_states
 
 
+# def fill_mask(masked_input, cls, tokenizer, topk=5):
+#     # Adapted from https://github.com/pytorch/fairseq/blob/master/fairseq/models/roberta/hub_interface.py
+#     logits = cls(input_ids)[0]  # The last hidden-state is the first element of the output tuple
+#     masked_index = (input_ids.squeeze() == tokenizer.mask_token_id).nonzero().item()
+#     logits = logits[0, masked_index, :]
+#     prob = logits.softmax(dim=0)
+#     values, indices = prob.topk(k=topk, dim=0)
+
+
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.predictions = CamembertForMaskedLM(config)
+        self.model = CamembertForMaskedLM(config)
 
-    def forward(self, sequence_output):
-        print("MLMHead input shape:", sequence_output.size())
-        prediction_scores = self.predictions(sequence_output)
-        return prediction_scores
+    def forward(self, inputs):
+        outputs = self.model(**inputs)
+        return outputs.logits
 
 
 class LOTClassModel(RobertaPreTrainedModel):
@@ -65,7 +73,8 @@ class LOTClassModel(RobertaPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        self.cls = CamembertOnlyMLMHead(config)
+        self.tokenizer = CamembertTokenizer(config)
+        self.cls = CamembertForMaskedLM(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
@@ -91,7 +100,8 @@ class LOTClassModel(RobertaPreTrainedModel):
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
             print("Last hidden states size:", last_hidden_states.size())
-            logits = self.cls(last_hidden_states)
+            #logits = self.cls(last_hidden_states)
+            logits = bert_outputs.logits
         else:
             sys.exit("Wrong pred_mode!")
         print(f"Model output size: {logits.size()}")
