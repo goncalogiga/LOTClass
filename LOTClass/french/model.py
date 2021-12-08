@@ -102,14 +102,15 @@ class LOTClassModel(RobertaPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
-            results = []
-            for tensor in input_ids:
-                logits = self.cls(tensor) # The last hidden-state is the first element of the output tuple
-                #masked_index = (tensor.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
-                #logits = logits[0, masked_index, :]
-                #logits = logits.softmax(dim=0)
-                results.append(logits)
-            logits = cat(results, dim=0)
+            # results = []
+            # for tensor in input_ids:
+            #     logits = self.cls(tensor)[0]  # The last hidden-state is the first element of the output tuple
+            #     #masked_index = (tensor.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
+            #     #logits = logits[0, masked_index, :]
+            #     #logits = logits.softmax(dim=0)
+            #     results.append(logits)
+            # logits = cat(results, dim=0)
+            logits = self.cls(input_ids)
         else:
             sys.exit("Wrong pred_mode!")
         print(f"Model output size: {logits.size()}")
