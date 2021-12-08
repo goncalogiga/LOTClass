@@ -73,7 +73,6 @@ class LOTClassModel(RobertaPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        self.tokenizer = CamembertTokenizer(config)
         self.cls = CamembertForMaskedLM()
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
