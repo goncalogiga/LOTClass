@@ -73,7 +73,11 @@ class LOTClassModel(RobertaPreTrainedModel):
         #self.bert = BertModel(config, add_pooling_layer=False)
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
-        self.cls = CamembertOnlyMLMHead(config)
+        # ===================================================================
+        self.tokenizer = CamembertTokenizer.from_pretrained("camembert-base")
+        self.model = CamembertForMaskedLM.from_pretrained("camembert-base")
+        self.model.eval()
+        # ===================================================================
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
@@ -98,11 +102,10 @@ class LOTClassModel(RobertaPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
-            print("Last hidden states size:", last_hidden_states.size())
-            logits = self.cls(input_ids)
-            print("Type of logits: ", type(logits))
-            print(logits)
-            #logits = bert_outputs.logits
+            logits = self.cls(input_ids)[0]  # The last hidden-state is the first element of the output tuple
+            masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
+            logits = logits[0, masked_index, :]
+            logits = logits.softmax(dim=0)
         else:
             sys.exit("Wrong pred_mode!")
         print(f"Model output size: {logits.size()}")
