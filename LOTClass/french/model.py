@@ -3,7 +3,7 @@
 #from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 from transformers import CamembertModel
 from transformers import RobertaPreTrainedModel
-from transformers.activations import ACT2FN
+from transformers import CamembertTokenizer
 from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
 from torch import nn, zeros
@@ -50,12 +50,17 @@ import sys
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.model = CamembertForMaskedLM(config)
+        self.model = CamembertForMaskedLM.from_pretrained("camembert-base")
+        self.tokenizer = CamembertTokenizer.from_pretrained("camembert-base")
+        self.topk = config.top_pred_num
         self.model.eval()
 
     def forward(self, input_ids):
-        prediction_scores = self.model(input_ids)
-        return prediction_scores
+        logits = self.model(input_ids)[0]  # The last hidden-state is the first element of the output tuple
+        masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
+        logits = logits[0, masked_index, :]
+        prob = logits.softmax(dim=0)
+        return prob.topk(k=self.topk, dim=0)
 
 
 class LOTClassModel(RobertaPreTrainedModel):
