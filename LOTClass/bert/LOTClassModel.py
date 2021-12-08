@@ -2,8 +2,8 @@ import os
 import shutil
 from sklearn.metrics import classification_report
 from pathlib import Path
-from LOTClass.english.trainer import LOTClassTrainer
-from LOTClass.english.config import LOTClassConfig
+from LOTClass.bert.trainer import LOTClassTrainer
+from LOTClass.bert.config import LOTClassConfig
 
 
 class LOTClassifier():
