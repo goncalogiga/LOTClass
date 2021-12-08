@@ -24,7 +24,7 @@ class LOTClassModel(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
-        self.bert = FlaubertModel(config, add_pooling_layer=False)
+        self.bert = FlaubertModel(config)
         #self.bert = CamembertModel(config, add_pooling_layer=False)
         self.cls = FlaubertOnlyMLMHead(config)
         #self.cls = CamembertForMaskedLM(config)
