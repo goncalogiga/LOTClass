@@ -179,6 +179,7 @@ class LOTClassTrainer(object):
                     new_doc.append(new_word)
                 wordpcs = []
         if (label_idx >= 0).any():
+            print(f"Document {i} has label {label_idx} in it!")
             return ' '.join(new_doc), label_idx
         else:
             return None
