@@ -159,6 +159,7 @@ class LOTClassTrainer(object):
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
         print("tokenized doc: ", doc[:10])
+        print("labels: ", self.label2class)
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
@@ -169,6 +170,7 @@ class LOTClassTrainer(object):
                 break
             if i == len(doc) - 1 or not doc[i+1].startswith("##"):
                 word = ''.join(wordpcs)
+                print(word, sep='-')
                 if word in self.label2class:
                     label_idx[idx] = self.label2class[word]
                     # replace label names that are not in tokenizer's vocabulary with the [MASK] token
