@@ -158,8 +158,6 @@ class LOTClassTrainer(object):
     # find label name indices and replace out-of-vocab label names with [MASK]
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
-        print("tokenized doc: ", doc[:10])
-        print("labels: ", self.label2class)
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
@@ -170,7 +168,6 @@ class LOTClassTrainer(object):
                 break
             if i == len(doc) - 1 or not doc[i+1].startswith("##"):
                 word = ''.join(wordpcs)
-                print(word, sep='-')
                 if word in self.label2class:
                     label_idx[idx] = self.label2class[word]
                     # replace label names that are not in tokenizer's vocabulary with the [MASK] token
@@ -182,7 +179,6 @@ class LOTClassTrainer(object):
                     new_doc.append(new_word)
                 wordpcs = []
         if (label_idx >= 0).any():
-            print(f"Document {i} has label {label_idx} in it!")
             return ' '.join(new_doc), label_idx
         else:
             return None
@@ -212,7 +208,6 @@ class LOTClassTrainer(object):
     def read_data(self, dataset_dir, train_file, test_file, test_label_file):
         self.train_data, self.label_name_data = self.create_dataset(dataset_dir, train_file, None, "train.pt", 
                                                                     find_label_name=True, label_name_loader_name="label_name_data.pt")
-        print()
         if test_file is not None:
             self.test_data = self.create_dataset(dataset_dir, test_file, test_label_file, "test.pt")
 
@@ -280,10 +275,6 @@ class LOTClassTrainer(object):
             self.model.to(rank)
         model = self.model
         model.eval()
-        print(self.label_name_data)
-        print(f"inputs size: {self.label_name_data['input_ids'].size()}")
-        print(f"attention size: {self.label_name_data['attention_masks'].size()}")
-        print(f"labels size: {self.label_name_data['labels'].size()}")
         label_name_dataset_loader = self.make_dataloader(rank, self.label_name_data, self.eval_batch_size)
         category_words_freq = {i: defaultdict(float) for i in range(self.num_class)}
         wrap_label_name_dataset_loader = tqdm(label_name_dataset_loader) if rank == 0 else label_name_dataset_loader
