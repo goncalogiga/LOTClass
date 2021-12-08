@@ -309,6 +309,7 @@ class LOTClassTrainer(object):
                         self.print_predictions(word_list)
                         for j, word_id in enumerate(word_list):
                             category_words_freq[label_idx[i].item()][word_id.item()] += 1
+                    print(category_words_freq)
             save_file = os.path.join(self.temp_dir, f"{rank}_"+loader_name)
             torch.save(category_words_freq, save_file)
         except RuntimeError as err:
