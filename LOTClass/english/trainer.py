@@ -158,6 +158,7 @@ class LOTClassTrainer(object):
     # find label name indices and replace out-of-vocab label names with [MASK]
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
+        print("tokenized doc: ", doc[:10])
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
