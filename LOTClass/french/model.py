@@ -59,7 +59,7 @@ import sys
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.model = CamembertForMaskedLM(config)
+        self.model = CamembertForMaskedLM.from_pretrained('camembert-base')
 
     def forward(self, inputs):
         outputs = self.model(**inputs)
@@ -74,7 +74,7 @@ class LOTClassModel(RobertaPreTrainedModel):
         self.bert = CamembertModel(config, add_pooling_layer=False)
         #self.cls = BertOnlyMLMHead(config)
         self.tokenizer = CamembertTokenizer(config)
-        self.cls = CamembertForMaskedLM(config)
+        self.cls = CamembertForMaskedLM()
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.activation = nn.Tanh()
