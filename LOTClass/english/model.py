@@ -1,12 +1,23 @@
 from transformers import BertPreTrainedModel
 # =================================================================================
 from transformers import BertModel
-from transformers.models.bert.modeling_bert import BertOnlyMLMHead
+from transformers.models.bert.modeling_bert import BertLMPredictionHead
 #from transformers import CamembertModel
 #from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
 from torch import nn
 import sys
+
+
+class BertOnlyMLMHead(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.predictions = BertLMPredictionHead(config)
+
+    def forward(self, sequence_output):
+        print("MLMHead input shape:", sequence_output.size())
+        prediction_scores = self.predictions(sequence_output)
+        return prediction_scores
 
 
 class LOTClassModel(BertPreTrainedModel):

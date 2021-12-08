@@ -56,6 +56,7 @@ class CamembertOnlyMLMHead(nn.Module):
         self.model.eval()
 
     def forward(self, input_ids):
+        print("MLMHead input shape:", input_ids.size())
         logits = self.model(input_ids)[0]  # The last hidden-state is the first element of the output tuple
         masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
         logits = logits[0, masked_index, :]
