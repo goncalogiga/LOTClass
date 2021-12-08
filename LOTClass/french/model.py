@@ -100,7 +100,7 @@ class LOTClassModel(RobertaPreTrainedModel):
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
             print("Last hidden states size:", last_hidden_states.size())
-            logits = self.cls(last_hidden_states)
+            logits = self.cls(input_ids)
             #logits = bert_outputs.logits
         else:
             sys.exit("Wrong pred_mode!")
