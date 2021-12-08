@@ -2,8 +2,8 @@ import os
 import shutil
 from sklearn.metrics import classification_report
 from pathlib import Path
-from LOTClass.bert.trainer import LOTClassTrainer
-from LOTClass.bert.config import LOTClassConfig
+from LOTClass.flaubert.trainer import LOTClassTrainer
+from LOTClass.flaubert.config import LOTClassConfig
 
 
 class LOTClassifier():

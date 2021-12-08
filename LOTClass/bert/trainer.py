@@ -21,7 +21,7 @@ import os
 import shutil
 import sys
 from tqdm import tqdm
-from LOTClass.english.model import LOTClassModel
+from LOTClass.bert.model import LOTClassModel
 import warnings
 warnings.filterwarnings("ignore")
 
