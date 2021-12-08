@@ -56,7 +56,6 @@ class CamembertOnlyMLMHead(nn.Module):
         self.model.eval()
 
     def forward(self, input_ids):
-        input_ids = input_ids.unsqueeze(0)
         print("MLMHead input shape:", input_ids.size())
         logits = self.model(input_ids)[0]  # The last hidden-state is the first element of the output tuple
         masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
@@ -97,7 +96,7 @@ class LOTClassModel(RobertaPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
-            logits = self.cls(last_hidden_states)
+            logits = self.cls(bert_outputs)
         else:
             sys.exit("Wrong pred_mode!")
         print(f"Model output size: {logits.size()}")
