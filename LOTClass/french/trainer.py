@@ -159,12 +159,14 @@ class LOTClassTrainer(object):
     # find label name indices and replace out-of-vocab label names with [MASK]
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
+        print(doc)
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
         idx = 1 # index starts at 1 due to [CLS] token
         for i, wordpc in enumerate(doc):
             wordpcs.append(wordpc[1:] if wordpc.startswith("▁") else wordpc)
+            print(wordpc)
             if idx >= self.max_len - 1: # last index will be [SEP] token
                 break
             if i == len(doc) - 1 or doc[i+1].startswith("▁"):
@@ -179,7 +181,6 @@ class LOTClassTrainer(object):
                     idx += len(wordpcs)
                     new_doc.append(new_word)
                 wordpcs = []
-            print(wordpcs)
         if (label_idx >= 0).any():
             return ' '.join(new_doc), label_idx
         else:
