@@ -164,10 +164,10 @@ class LOTClassTrainer(object):
         wordpcs = []
         idx = 1 # index starts at 1 due to [CLS] token
         for i, wordpc in enumerate(doc):
-            wordpcs.append(wordpc[2:] if wordpc.startswith("##") else wordpc)
+            wordpcs.append(wordpc[2:] if wordpc.startswith("▁") else wordpc)
             if idx >= self.max_len - 1: # last index will be [SEP] token
                 break
-            if i == len(doc) - 1 or not doc[i+1].startswith("##"):
+            if i == len(doc) - 1 or not doc[i+1].startswith("▁"):
                 word = ''.join(wordpcs)
                 if word in self.label2class:
                     label_idx[idx] = self.label2class[word]
