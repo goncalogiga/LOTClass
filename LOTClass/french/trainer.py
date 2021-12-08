@@ -169,7 +169,7 @@ class LOTClassTrainer(object):
             wordpcs.append(wordpc[1:] if wordpc.startswith("▁") else wordpc)
             if idx >= self.max_len - 1: # last index will be [SEP] token
                 break
-            if i == len(doc) - 1 or not doc[i+1].startswith("▁"):
+            if i == len(doc) - 1 or doc[i+1].startswith("▁"):
                 word = ''.join(wordpcs)
                 print(word, sep='-')
                 if word in self.label2class:
