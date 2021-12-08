@@ -208,6 +208,7 @@ class LOTClassTrainer(object):
     def read_data(self, dataset_dir, train_file, test_file, test_label_file):
         self.train_data, self.label_name_data = self.create_dataset(dataset_dir, train_file, None, "train.pt", 
                                                                     find_label_name=True, label_name_loader_name="label_name_data.pt")
+        print()
         if test_file is not None:
             self.test_data = self.create_dataset(dataset_dir, test_file, test_label_file, "test.pt")
 
@@ -275,6 +276,7 @@ class LOTClassTrainer(object):
             self.model.to(rank)
         model = self.model
         model.eval()
+        print(self.label_name_data)
         label_name_dataset_loader = self.make_dataloader(rank, self.label_name_data, self.eval_batch_size)
         category_words_freq = {i: defaultdict(float) for i in range(self.num_class)}
         wrap_label_name_dataset_loader = tqdm(label_name_dataset_loader) if rank == 0 else label_name_dataset_loader
