@@ -160,6 +160,7 @@ class LOTClassTrainer(object):
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
         print(doc)
+        print(doc)
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
