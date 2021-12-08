@@ -179,6 +179,7 @@ class LOTClassTrainer(object):
                     idx += len(wordpcs)
                     new_doc.append(new_word)
                 wordpcs = []
+            print(wordpcs)
         if (label_idx >= 0).any():
             return ' '.join(new_doc), label_idx
         else:

@@ -165,7 +165,6 @@ class LOTClassTrainer(object):
         for i, wordpc in enumerate(doc):
             wordpcs.append(wordpc[2:] if wordpc.startswith("##") else wordpc)
             if idx >= self.max_len - 1: # last index will be [SEP] token
-                print(wordpcs)
                 break
             if i == len(doc) - 1 or not doc[i+1].startswith("##"):
                 word = ''.join(wordpcs)
@@ -179,6 +178,7 @@ class LOTClassTrainer(object):
                     idx += len(wordpcs)
                     new_doc.append(new_word)
                 wordpcs = []
+            print(wordpcs)
         if (label_idx >= 0).any():
             return ' '.join(new_doc), label_idx
         else:
