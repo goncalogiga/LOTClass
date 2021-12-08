@@ -59,10 +59,10 @@ import sys
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.model = CamembertForMaskedLM.from_pretrained('camembert-base')
+        self.model = CamembertForMaskedLM.from_pretrained('camembert-base', config=config)
 
-    def forward(self, inputs):
-        outputs = self.model(**inputs)
+    def forward(self, input_ids  ):
+        outputs = self.model(input_ids=input_ids )
         return outputs.logits
 
 
