@@ -105,9 +105,9 @@ class LOTClassModel(RobertaPreTrainedModel):
             results = []
             for tensor in input_ids:
                 logits = self.cls(tensor)[0]  # The last hidden-state is the first element of the output tuple
-                masked_index = (tensor.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
-                logits = logits[0, masked_index, :]
-                logits = logits.softmax(dim=0)
+                #masked_index = (tensor.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
+                #logits = logits[0, masked_index, :]
+                #logits = logits.softmax(dim=0)
                 results.append(logits)
             logits = cat(results, dim=0)
         else:
