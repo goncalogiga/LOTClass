@@ -267,6 +267,13 @@ class LOTClassTrainer(object):
                     delete_idx.append(j)
             self.category_vocab[i] = np.delete(self.category_vocab[i], delete_idx)
 
+    def print_predictions(self, word_list):
+        if not self.verbose: return
+
+        print(40*'=')
+        print(self.decode(word_list))
+        print(40*'=')
+
     # construct category vocabulary (distributed function)
     def category_vocabulary_dist(self, rank, top_pred_num=50, loader_name="category_vocab.pt"):
         if self.world_size > 1:
@@ -285,9 +292,6 @@ class LOTClassTrainer(object):
                     input_mask = batch[1].to(rank)
                     label_pos = batch[2].to(rank)
                     match_idx = label_pos >= 0
-                    if self.verbose:
-                        print(f"input size: {input_ids.size()}")
-                        print(input_ids)
                     predictions = model(input_ids,
                                         pred_mode="mlm",
                                         token_type_ids=None, 
@@ -295,7 +299,7 @@ class LOTClassTrainer(object):
                     _, sorted_res = torch.topk(predictions[match_idx], top_pred_num, dim=-1)
                     label_idx = label_pos[match_idx]
                     for i, word_list in enumerate(sorted_res):
-                        print(word_list)
+                        self.print_predictions(word_list)
                         for j, word_id in enumerate(word_list):
                             category_words_freq[label_idx[i].item()][word_id.item()] += 1
             save_file = os.path.join(self.temp_dir, f"{rank}_"+loader_name)
