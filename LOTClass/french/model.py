@@ -52,7 +52,7 @@ class CamembertOnlyMLMHead(nn.Module):
         super().__init__()
         self.model = CamembertForMaskedLM.from_pretrained("camembert-base")
         self.tokenizer = CamembertTokenizer.from_pretrained("camembert-base")
-        self.topk = config.top_pred_num
+        self.topk = 50 # Maximum number of predictions kept
         self.model.eval()
 
     def forward(self, input_ids):
