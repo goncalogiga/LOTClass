@@ -50,7 +50,7 @@ import sys
 class CamembertOnlyMLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.model = CamembertForMaskedLM(config)
+        self.predictions = CamembertForMaskedLM(config)
 
     def forward(self, sequence_output):
         print("MLMHead input shape:", sequence_output.size())
