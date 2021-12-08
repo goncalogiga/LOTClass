@@ -54,7 +54,7 @@ class CamembertOnlyMLMHead(nn.Module):
         self.model.eval()
 
     def forward(self, input_ids):
-        prediction_scores = self.model(input_ids)[0]
+        prediction_scores = self.model(input_ids)
         return prediction_scores
 
 
