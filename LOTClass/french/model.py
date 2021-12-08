@@ -6,7 +6,7 @@ from transformers import RobertaPreTrainedModel
 from transformers import CamembertTokenizer
 from transformers.models.camembert.modeling_camembert import CamembertForMaskedLM
 # =================================================================================
-from torch import nn, zeros
+from torch import nn, cat
 import sys
 
 
@@ -102,10 +102,14 @@ class LOTClassModel(RobertaPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
-            logits = self.cls(input_ids)[0]  # The last hidden-state is the first element of the output tuple
-            masked_index = (input_ids.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
-            logits = logits[0, masked_index, :]
-            logits = logits.softmax(dim=0)
+            results = []
+            for tensor in input_ids:
+                logits = self.cls(tensor)[0]  # The last hidden-state is the first element of the output tuple
+                masked_index = (tensor.squeeze() == self.tokenizer.mask_token_id).nonzero().item()
+                logits = logits[0, masked_index, :]
+                logits = logits.softmax(dim=0)
+                results.append(logits)
+            logits = cat(results, dim=0)
         else:
             sys.exit("Wrong pred_mode!")
         print(f"Model output size: {logits.size()}")
