@@ -75,8 +75,8 @@ class LOTClassModel(RobertaPreTrainedModel):
         #self.cls = BertOnlyMLMHead(config)
         # ===================================================================
         self.tokenizer = CamembertTokenizer.from_pretrained("camembert-base")
-        self.model = CamembertForMaskedLM.from_pretrained("camembert-base")
-        self.model.eval()
+        self.cls = CamembertForMaskedLM.from_pretrained("camembert-base")
+        self.cls.eval()
         # ===================================================================
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.dense = nn.Linear(config.hidden_size, config.hidden_size)
