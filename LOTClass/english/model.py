@@ -45,4 +45,7 @@ class LOTClassModel(BertPreTrainedModel):
             logits = self.cls(last_hidden_states)
         else:
             sys.exit("Wrong pred_mode!")
+        print(f"Model output size: {logits.size()}")
+        print(f"Model output type: {type(logits)}")
+        print(f"Model outout: {logits}")
         return logits
