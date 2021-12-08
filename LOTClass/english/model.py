@@ -53,6 +53,7 @@ class LOTClassModel(BertPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
+            print("Last hidden states size:", last_hidden_states.size())
             logits = self.cls(last_hidden_states)
         else:
             sys.exit("Wrong pred_mode!")
