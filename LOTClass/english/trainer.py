@@ -296,6 +296,8 @@ class LOTClassTrainer(object):
                     match_idx = label_pos >= 0
                     for input_id in input_ids:
                         self.print_predictions(input_id)
+                    for attention_mask in input_mask:
+                        print(attention_mask)
                     predictions = model(input_ids,
                                         pred_mode="mlm",
                                         token_type_ids=None, 
