@@ -1,4 +1,4 @@
-from transformers import PreTrainedModel
+from transformers import BertPreTrainedModel
 # =================================================================================
 from transformers import FlaubertModel
 from transformers.models.flaubert.modeling_flaubert import FlaubertWithLMHeadModel
@@ -19,7 +19,7 @@ class FlaubertOnlyMLMHead(nn.Module):
         return prediction_scores
 
 
-class LOTClassModel(PreTrainedModel):
+class LOTClassModel(BertPreTrainedModel):
 
     def __init__(self, config):
         super().__init__(config)

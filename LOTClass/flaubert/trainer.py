@@ -14,7 +14,7 @@ from nltk.corpus import stopwords
 from transformers import AdamW, get_linear_schedule_with_warmup
 # =================================================================================
 #from transformers.models.camembert.tokenization_camembert import CamembertTokenizer
-from transformers import FlaubertTokenizer
+from transformers import FlaubertTokenizer, FlaubertConfig
 # =================================================================================
 import numpy as np
 import os
@@ -52,7 +52,9 @@ class LOTClassTrainer(object):
         self.inv_vocab = {k:v for v, k in self.vocab.items()}
         self.read_label_names(args.dataset_dir, args.label_names_file)
         self.num_class = len(self.label_name_dict)
+        config = FlaubertConfig()
         self.model = LOTClassModel.from_pretrained(self.pretrained_lm,
+                                                   config=config,
                                                    output_attentions=False,
                                                    output_hidden_states=False,
                                                    num_labels=self.num_class)
