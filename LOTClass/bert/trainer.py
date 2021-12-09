@@ -306,7 +306,8 @@ class LOTClassTrainer(object):
                                         pred_mode="mlm",
                                         token_type_ids=None, 
                                         attention_mask=input_mask)
-                    print(predictions.size())
+                    if self.verbose:
+                        print(predictions.size())
                     _, sorted_res = torch.topk(predictions[match_idx], top_pred_num, dim=-1)
                     label_idx = label_pos[match_idx]
                     for i, word_list in enumerate(sorted_res):

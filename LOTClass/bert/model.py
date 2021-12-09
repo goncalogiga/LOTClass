@@ -15,7 +15,7 @@ class BertOnlyMLMHead(nn.Module):
         self.predictions = BertLMPredictionHead(config)
 
     def forward(self, sequence_output):
-        print("MLMHead input shape:", sequence_output.size())
+        #print("MLMHead input shape:", sequence_output.size())
         prediction_scores = self.predictions(sequence_output)
         return prediction_scores
 
@@ -53,10 +53,10 @@ class LOTClassModel(BertPreTrainedModel):
             trans_states = self.dropout(trans_states)
             logits = self.classifier(trans_states)
         elif pred_mode == "mlm":
-            print("Last hidden states size:", last_hidden_states.size())
+            #print("Last hidden states size:", last_hidden_states.size())
             logits = self.cls(last_hidden_states)
         else:
             sys.exit("Wrong pred_mode!")
-        print(f"Model output size: {logits.size()}")
-        print(f"Model output type: {type(logits)}")
+        #print(f"Model output size: {logits.size()}")
+        #print(f"Model output type: {type(logits)}")
         return logits
