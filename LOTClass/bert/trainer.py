@@ -158,14 +158,16 @@ class LOTClassTrainer(object):
     # find label name indices and replace out-of-vocab label names with [MASK]
     def label_name_in_doc(self, doc):
         doc = self.tokenizer.tokenize(doc)
-        print(doc)
+        if self.verbose:
+            print(doc)
         label_idx = -1 * torch.ones(self.max_len, dtype=torch.long)
         new_doc = []
         wordpcs = []
         idx = 1 # index starts at 1 due to [CLS] token
         for i, wordpc in enumerate(doc):
             wordpcs.append(wordpc[2:] if wordpc.startswith("##") else wordpc)
-            print(wordpcs)
+            if self.verbose:
+                print(wordpcs)
             if idx >= self.max_len - 1: # last index will be [SEP] token
                 break
             if i == len(doc) - 1 or not doc[i+1].startswith("##"):
@@ -294,7 +296,8 @@ class LOTClassTrainer(object):
                     input_mask = batch[1].to(rank)
                     label_pos = batch[2].to(rank)
                     match_idx = label_pos >= 0
-                    print(match_idx)
+                    if self.verbose:
+                        print(match_idx)
                     for input_id in input_ids:
                         self.print_predictions(input_id)
                     for attention_mask in input_mask:
@@ -310,7 +313,8 @@ class LOTClassTrainer(object):
                         self.print_predictions(word_list)
                         for j, word_id in enumerate(word_list):
                             category_words_freq[label_idx[i].item()][word_id.item()] += 1
-                    print(category_words_freq)
+                    if self.verbose:
+                        print(category_words_freq)
             save_file = os.path.join(self.temp_dir, f"{rank}_"+loader_name)
             torch.save(category_words_freq, save_file)
         except RuntimeError as err:
