@@ -1,9 +1,14 @@
-# LOTClass
-**FORKED FROM yumeng5/LOTClass**
+# LOTClass Fork
 
-The source code used for [**Text Classification Using Label Names Only: A Language Model Self-Training Approach**](https://arxiv.org/abs/2010.07245), published in EMNLP 2020.
+## Changes made in this fork
 
-## Requirements
+This a fork of the source code used for the paper [**Text Classification Using Label Names Only: A Language Model Self-Training Approach**](https://arxiv.org/abs/2010.07245), published in EMNLP 2020. 
+
+This fork adds compatibility to two new transformers' architectures (Camembert and Flaubert) so the LOTClass algorithm can run on a French corpus. In this fork it is also possible to run the code without at least 2 GPUs, something that was not possible using the original source code. An example of how to use these changes in practice is given in the notebook ```example.ipynb```.
+
+## Original README
+
+### Requirements
 
 At least one GPU is required to run the code.
 
@@ -15,7 +20,7 @@ $ pip3 install -r requirements.txt
 
 Python 3.6 or above is strongly recommended; using older python versions might lead to package incompatibility issues.
 
-## Reproducing the Results
+### Reproducing the Results
 
 We provide four ```get_data.sh``` scripts for downloading the datasets used in the paper under ```datasets``` and four training bash scripts [```agnews.sh```](agnews.sh), [```dbpedia.sh```](dbpedia.sh), [```imdb.sh```](imdb.sh) and [```amazon.sh```](amazon.sh) for running the model on the four datasets.
 
@@ -23,7 +28,7 @@ We provide four ```get_data.sh``` scripts for downloading the datasets used in t
 
 The training bash scripts assume you have two 10GB GPUs. If you have different number of GPUs, or GPUs of different memory sizes, refer to [the next section](#command-line-arguments) for how to change the following command line arguments appropriately (while keeping other arguments unchanged): ```train_batch_size```, ```accum_steps```, ```eval_batch_size``` and ```gpus```.
 
-## Command Line Arguments
+### Command Line Arguments
 
 The meanings of the command line arguments will be displayed upon typing
 ```
@@ -38,7 +43,7 @@ The following arguments directly affect the performance of the model and need to
 
 Other arguments can be kept as their default values.
 
-## Running on New Datasets
+### Running on New Datasets
 
 To execute the code on a new dataset, you need to 
 
@@ -53,7 +58,7 @@ To execute the code on a new dataset, you need to
 
 You can always refer to the example datasets when preparing your own datasets.
 
-## Citations
+### Citations
 
 Please cite the following paper if you find the code helpful for your research.
 ```
